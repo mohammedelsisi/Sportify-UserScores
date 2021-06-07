@@ -1,20 +1,31 @@
 package com.example.SportifyUserScores.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.SportifyUserScores.util.JwtUtil;
 
+
 @RestController
+
 public class ValidatingEndPoint {
 
     @Autowired
     final JwtUtil jwtUtil;
-    String jwt = null;
-    String email= null;
+    String email;
 
-    @RequestMapping("/hello")
-    public String hello(){
+    public ValidatingEndPoint(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    public String hello(@RequestHeader(name = "Authorization") String jwt) {
         email = jwtUtil.extractEmail(jwt);
-        return email; }
+
+        return email;
+
+    }
 }
+
+
+
