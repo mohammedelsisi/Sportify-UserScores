@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @SpringBootApplication
-public class SportifyUserScoresApplication extends WebSecurityConfigurerAdapter {
+public class SportifyUserScoresApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SportifyUserScoresApplication.class, args);
@@ -19,8 +19,5 @@ public class SportifyUserScoresApplication extends WebSecurityConfigurerAdapter 
 		return new ModelMapper();
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/**").permitAll().and().csrf().disable();
-	}
+
 }

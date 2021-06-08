@@ -1,11 +1,11 @@
 package com.example.SportifyUserScores.filters;
 
-import com.example.UserAuthentication.service.MyUserDetailsService;
-import com.example.UserAuthentication.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.SportifyUserScores.model.dto.UserDto;
+import com.example.SportifyUserScores.model.enums.UserRole;
+import com.example.SportifyUserScores.util.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -15,41 +15,34 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public JWTAuthorizationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
-
-        String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
-
-
         }
-
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (jwtUtil.validationToken(jwt, userDetails)){
-
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails , null, userDetails.getAuthorities());
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtUtil.validationToken(jwt)) {
+                var dto = new UserDto(jwtUtil.extractEmail(jwt), jwtUtil.extractUsername(jwt), UserRole.valueOf(jwtUtil.extractRole(jwt)));
+                var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(dto, null, List.of(new SimpleGrantedAuthority(dto.getUserRole().toString())));
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 }

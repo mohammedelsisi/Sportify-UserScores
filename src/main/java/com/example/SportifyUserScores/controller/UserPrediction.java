@@ -23,10 +23,6 @@ public class UserPrediction {
         this.matchesPredictionService = matchesPredictionService;
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> errorHandling() {
-        return ResponseEntity.noContent().build();
-    }
 
     @PostMapping
     public ResponseEntity<Object> saveSelected(@RequestBody MatchSelectionDto matchSelection, HttpServletRequest request) {
