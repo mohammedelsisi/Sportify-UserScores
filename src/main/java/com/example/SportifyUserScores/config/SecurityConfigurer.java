@@ -1,4 +1,4 @@
-package com.example.SportifyUserScores;
+package com.example.SportifyUserScores.config;
 
 import com.example.SportifyUserScores.filters.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;

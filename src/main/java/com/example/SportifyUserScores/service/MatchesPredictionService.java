@@ -2,7 +2,7 @@ package com.example.SportifyUserScores.service;
 
 import com.example.SportifyUserScores.model.dto.MatchSelectionDto;
 import com.example.SportifyUserScores.model.orm.MatchSelection;
-import com.example.SportifyUserScores.repo.MatchSelectionDao;
+import com.example.SportifyUserScores.repo.MatchSelectionJpaRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,22 +13,22 @@ import java.util.Optional;
 @Service
 public class MatchesPredictionService {
 
-    final  MatchSelectionDao matchSelectionDao;
+    final MatchSelectionJpaRepo matchSelectionJpaRepo;
     final ModelMapper modelMapper;
 
-    public MatchesPredictionService(MatchSelectionDao matchSelectionDao, ModelMapper modelMapper) {
-        this.matchSelectionDao = matchSelectionDao;
+    public MatchesPredictionService(MatchSelectionJpaRepo matchSelectionJpaRepo, ModelMapper modelMapper) {
+        this.matchSelectionJpaRepo = matchSelectionJpaRepo;
         this.modelMapper = modelMapper;
     }
 
     public long saveUserSelection(MatchSelectionDto matchSelectionDto){
         MatchSelection map = modelMapper.map(matchSelectionDto, MatchSelection.class);
-        MatchSelection save = matchSelectionDao.save(map);
+        MatchSelection save = matchSelectionJpaRepo.save(map);
         return save.getId();
     }
 
     public MatchSelection getSelection(long matchSelection) {
-        Optional<MatchSelection> byId = matchSelectionDao.findById(matchSelection);
+        Optional<MatchSelection> byId = matchSelectionJpaRepo.findById(matchSelection);
         if(byId.isPresent()){
             return byId.get();
         }
@@ -36,6 +36,6 @@ public class MatchesPredictionService {
     }
 
     public List<MatchSelection> getAll() {
-        return matchSelectionDao.findAll();
+        return matchSelectionJpaRepo.findAll();
     }
 }
