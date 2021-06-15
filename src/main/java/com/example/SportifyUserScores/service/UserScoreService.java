@@ -1,6 +1,8 @@
 package com.example.SportifyUserScores.service;
 
 import com.example.SportifyUserScores.model.dto.broker.MatchResultMsgDto;
+import com.example.SportifyUserScores.model.dto.broker.NewUserMessage;
+import com.example.SportifyUserScores.model.orm.UserScore;
 import com.example.SportifyUserScores.repo.MatchSelectionJpaRepo;
 import com.example.SportifyUserScores.repo.UserScoreJpaRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -26,5 +28,10 @@ public class UserScoreService {
         log.info("updateUserScoreByMatch: {}", userEmails);
         // update the user score
         userScoreJpaRepo.updateUserScoreByEmails(userEmails, 1);
+    }
+
+    public void CreateUserZeroScore(NewUserMessage newUserMessage) {
+        UserScore userScore = new UserScore(newUserMessage.getEmail(), 0);
+        userScoreJpaRepo.save(userScore);
     }
 }

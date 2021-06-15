@@ -18,7 +18,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-public class InboundsIntegrationConfig {
+public class InboundsMatchResultConfig {
 
     // rabbitmq queue
     private final String queueName = "finishedMatchesQueue";
