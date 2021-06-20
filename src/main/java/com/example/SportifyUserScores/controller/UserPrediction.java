@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/predictions")
+@CrossOrigin
 public class UserPrediction {
 
 
