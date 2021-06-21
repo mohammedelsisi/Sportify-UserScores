@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface MatchSelectionJpaRepo extends JpaRepository<MatchSelection,Long> {
 
+    boolean existsByMatchIdAndAndUserEmail(Long matchId,String userEmail);
+
     @Query("select m.userEmail from MatchSelection m where m.matchId = ?1 and m.selectedTeamId = ?2")
     List<String> queryUserEmailByMatchIdAndSelectedTeamId(long matchId, long selectedTeamId);
 }

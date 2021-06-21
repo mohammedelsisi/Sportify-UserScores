@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -26,15 +25,23 @@ public class UserPrediction {
 
 
     @PostMapping
-    public ResponseEntity<Object> saveSelected(@RequestBody MatchSelectionDto matchSelection, HttpServletRequest request) {
+    public ResponseEntity<Object> saveSelection(@RequestBody MatchSelectionDto matchSelection, HttpServletRequest request) {
         long id = matchesPredictionService.saveUserSelection(matchSelection);
         var httpHeaders = new HttpHeaders();
         httpHeaders.add("location", request.getRequestURL() + "/" + id);
         return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).build();
     }
 
+    @PostMapping("/check")
+    public ResponseEntity<Object> checkSelected(@RequestBody MatchSelectionDto matchSelection) {
+        var matchSelectionCheck = matchesPredictionService.getIfPresent(matchSelection);
+        if(matchSelectionCheck!=null)
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(matchSelectionCheck);
+        else return ResponseEntity.status(HttpStatus.CONTINUE).body(new MatchSelectionDto());
+    }
+
     @GetMapping("/{id}")
-    public MatchSelection getSelection(@PathVariable long id) {
+    public MatchSelectionDto getSelection(@PathVariable long id) {
         return matchesPredictionService.getSelection(id);
 
     }
@@ -44,4 +51,5 @@ public class UserPrediction {
         List<MatchSelection> all = matchesPredictionService.getAll();
         return ResponseEntity.ok(all);
     }
+
 }

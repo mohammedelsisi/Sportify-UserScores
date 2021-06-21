@@ -27,15 +27,25 @@ public class MatchesPredictionService {
         return save.getId();
     }
 
-    public MatchSelection getSelection(long matchSelection) {
+    public MatchSelectionDto getSelection(long matchSelection) {
         Optional<MatchSelection> byId = matchSelectionJpaRepo.findById(matchSelection);
         if(byId.isPresent()){
-            return byId.get();
+            return modelMapper.map(byId.get(),MatchSelectionDto.class);
         }
         throw new EntityNotFoundException();
     }
 
     public List<MatchSelection> getAll() {
         return matchSelectionJpaRepo.findAll();
+    }
+
+    public MatchSelectionDto getIfPresent(MatchSelectionDto matchSelection) {
+        boolean exists = matchSelectionJpaRepo.existsByMatchIdAndAndUserEmail(matchSelection.getMatchId(), matchSelection.getUserEmail());
+        if(exists){
+            return getSelection(matchSelection.getMatchId());
+        }else {
+            return null;
+        }
+
     }
 }
