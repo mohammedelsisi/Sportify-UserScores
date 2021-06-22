@@ -21,7 +21,7 @@ public class MatchesPredictionService {
         this.modelMapper = modelMapper;
     }
 
-    public long saveUserSelection(MatchSelectionDto matchSelectionDto){
+    public long saveUserSelection(MatchSelectionDto matchSelectionDto) {
         MatchSelection map = modelMapper.map(matchSelectionDto, MatchSelection.class);
         MatchSelection save = matchSelectionJpaRepo.save(map);
         return save.getId();
@@ -29,9 +29,10 @@ public class MatchesPredictionService {
 
     public MatchSelectionDto getSelection(long matchSelection) {
         Optional<MatchSelection> byId = matchSelectionJpaRepo.findById(matchSelection);
-        if(byId.isPresent()){
-            return modelMapper.map(byId.get(),MatchSelectionDto.class);
+        if (byId.isPresent()) {
+            return modelMapper.map(byId.get(), MatchSelectionDto.class);
         }
+
         throw new EntityNotFoundException();
     }
 
@@ -40,12 +41,11 @@ public class MatchesPredictionService {
     }
 
     public MatchSelectionDto getIfPresent(MatchSelectionDto matchSelection) {
-        boolean exists = matchSelectionJpaRepo.existsByMatchIdAndAndUserEmail(matchSelection.getMatchId(), matchSelection.getUserEmail());
-        if(exists){
-            return getSelection(matchSelection.getMatchId());
-        }else {
-            return null;
-        }
+
+        MatchSelection matchSelection1 = matchSelectionJpaRepo.queryByMatchIdAndUserEmail(matchSelection.getMatchId(), matchSelection.getUserEmail());
+        if (matchSelection1 != null)
+            return modelMapper.map(matchSelection1, MatchSelectionDto.class);
+        else return null;
 
     }
 }
