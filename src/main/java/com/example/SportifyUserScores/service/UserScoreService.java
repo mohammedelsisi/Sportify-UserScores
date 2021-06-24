@@ -28,6 +28,7 @@ public class UserScoreService {
         log.info("updateUserScoreByMatch: {}", userEmails);
         // update the user score
         userScoreJpaRepo.updateUserScoreByEmails(userEmails, 1);
+        //TODO notify winners
     }
 
     public void CreateUserZeroScore(NewUserMessage newUserMessage) {
