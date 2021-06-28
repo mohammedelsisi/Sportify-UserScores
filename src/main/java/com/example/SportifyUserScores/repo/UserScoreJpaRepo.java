@@ -13,4 +13,6 @@ public interface UserScoreJpaRepo extends JpaRepository<UserScore, String> {
     @Modifying
     @Query("update UserScore u set u.score = u.score + ?2 where u.userEmail in ?1")
     void updateUserScoreByEmails(List<String> emails, int score);
+
+    UserScore queryByUserEmail(String userEmail);
 }

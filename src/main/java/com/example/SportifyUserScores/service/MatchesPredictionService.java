@@ -1,5 +1,6 @@
 package com.example.SportifyUserScores.service;
 
+import com.example.SportifyUserScores.model.dto.MatchResultHistoryDto;
 import com.example.SportifyUserScores.model.dto.MatchSelectionDto;
 import com.example.SportifyUserScores.model.orm.MatchSelection;
 import com.example.SportifyUserScores.repo.MatchSelectionJpaRepo;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchesPredictionService {
@@ -48,4 +50,13 @@ public class MatchesPredictionService {
         else return null;
 
     }
+
+    public List<MatchResultHistoryDto> getFinishedMatches(String userEmail) {
+        return matchSelectionJpaRepo.getFinishedMatches(userEmail);
+   }
+    public List<MatchSelectionDto> getNotFinishedMatches(String userEmail) {
+        List<MatchSelection> notFinishedMatches = matchSelectionJpaRepo.getNotFinishedMatches(userEmail);
+       return notFinishedMatches.stream().map(match->modelMapper.map(match,MatchSelectionDto.class)).collect(Collectors.toList());
+    }
+
 }

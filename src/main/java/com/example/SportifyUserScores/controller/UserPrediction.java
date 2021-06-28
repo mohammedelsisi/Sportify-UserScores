@@ -3,6 +3,8 @@ package com.example.SportifyUserScores.controller;
 import com.example.SportifyUserScores.model.dto.MatchSelectionDto;
 import com.example.SportifyUserScores.model.orm.MatchSelection;
 import com.example.SportifyUserScores.service.MatchesPredictionService;
+import com.example.SportifyUserScores.service.UserScoreService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,8 @@ public class UserPrediction {
 
 
     final MatchesPredictionService matchesPredictionService;
-
+    @Autowired
+    private UserScoreService userScoreService;
     public UserPrediction(MatchesPredictionService matchesPredictionService) {
         this.matchesPredictionService = matchesPredictionService;
     }
@@ -52,4 +55,8 @@ public class UserPrediction {
         return ResponseEntity.ok(all);
     }
 
+    @GetMapping("/score")
+    public Integer getUserScore (String userEmail){
+        return  userScoreService.getUserScore(userEmail);
+    }
 }

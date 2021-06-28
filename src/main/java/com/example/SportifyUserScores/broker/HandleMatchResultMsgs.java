@@ -20,6 +20,7 @@ public class HandleMatchResultMsgs {
     @ServiceActivator(inputChannel = "finishedMatchesChannel")
     public void handleMatchResult(@Payload MatchResultMsgDto matchResultMsgDto) {
         log.info("HandleMatchResultMsgs.handleMatchResult: {}", matchResultMsgDto);
+
         userScoreService.updateUserScoreByMatch(matchResultMsgDto);
     }
 
