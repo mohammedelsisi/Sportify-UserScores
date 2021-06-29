@@ -34,6 +34,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
+            System.err.println(jwt);
         }
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtUtil.validationToken(jwt)) {

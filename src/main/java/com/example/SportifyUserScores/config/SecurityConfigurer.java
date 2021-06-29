@@ -30,11 +30,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/**").permitAll()
-//                .antMatchers(HttpMethod.POST,"/predictions").hasAuthority("USER_ROLE")
-//                .antMatchers(HttpMethod.POST,"/predictions/check").hasAuthority("USER_ROLE")
-//                .antMatchers(HttpMethod.GET,"/predictions/*").hasAuthority("ADMIN_ROLE")
-//                .antMatchers(HttpMethod.GET,"/predictions").hasAuthority("ADMIN_ROLE")
+                .authorizeRequests()
+//                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/predictions").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.GET,"/predictions").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.GET,"/matches/*").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.GET,"/matches").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.POST,"/predictions/check").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.GET,"/predictions/score").hasAuthority("USER_ROLE")
+                .antMatchers(HttpMethod.GET,"/predictions/*").hasAuthority("ADMIN_ROLE")
+                .antMatchers(HttpMethod.GET,"/predictions").hasAuthority("ADMIN_ROLE")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
